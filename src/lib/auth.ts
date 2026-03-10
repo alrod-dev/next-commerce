@@ -4,9 +4,11 @@ import GoogleProvider from 'next-auth/providers/google';
 import { prisma } from './prisma';
 
 // Only validate secrets at runtime, not at build time
+// During build, we use placeholder secrets, so skip this check
 const isProduction = process.env.NODE_ENV === 'production';
+const isBuildTime = process.env.NEXTAUTH_SECRET?.includes('build-placeholder');
 
-if (isProduction && !process.env.NEXTAUTH_SECRET) {
+if (isProduction && !process.env.NEXTAUTH_SECRET && !isBuildTime) {
   throw new Error('NEXTAUTH_SECRET is not set');
 }
 
