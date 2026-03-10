@@ -116,7 +116,6 @@ model Product {
   @@index([categoryId])
   @@index([slug])
   @@index([featured])
-  @@fulltext([name, description])
 }
 
 model CartItem {
