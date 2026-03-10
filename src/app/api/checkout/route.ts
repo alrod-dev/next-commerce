@@ -5,6 +5,8 @@ import { stripe } from '@/lib/stripe';
 import { authOptions } from '@/lib/auth';
 import { generateOrderNumber, calculateTax, calculateShipping } from '@/lib/utils';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);

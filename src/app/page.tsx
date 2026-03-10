@@ -4,84 +4,94 @@ import { prisma } from '@/lib/prisma';
 import ProductGrid from '@/components/products/ProductGrid';
 import { ArrowRight, Zap, Shield, Truck } from 'lucide-react';
 
-async function FeaturedProducts() {
-  const products = await prisma.product.findMany({
-    where: { featured: true, published: true },
-    take: 8,
-    include: { category: true },
-  });
+export const dynamic = 'force-dynamic';
 
-  return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {products.map((product) => (
-        <div
-          key={product.id}
-          className="group relative overflow-hidden rounded-lg bg-white p-4 shadow-card transition-all hover:shadow-card-lg"
-        >
-          <div className="aspect-square overflow-hidden rounded bg-gray-200">
-            <img
-              src={product.image || 'https://via.placeholder.com/400'}
-              alt={product.name}
-              className="h-full w-full object-cover transition-transform group-hover:scale-110"
-            />
-          </div>
-          <div className="mt-4">
-            <h3 className="text-sm font-semibold text-gray-900 line-clamp-2">
-              {product.name}
-            </h3>
-            <p className="mt-1 text-xs text-gray-500">{product.category?.name}</p>
-            <div className="mt-2 flex items-center justify-between">
-              <div className="flex items-baseline gap-1">
-                <span className="text-lg font-bold text-gray-900">
-                  ${(product.salePrice || product.price).toFixed(2)}
-                </span>
-                {product.salePrice && (
-                  <span className="text-xs text-gray-500 line-through">
-                    ${product.price.toFixed(2)}
-                  </span>
-                )}
-              </div>
-              <div className="text-xs text-yellow-500">★ {product.rating}</div>
+async function FeaturedProducts() {
+  try {
+    const products = await prisma.product.findMany({
+      where: { featured: true, published: true },
+      take: 8,
+      include: { category: true },
+    });
+
+    return (
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {products.map((product) => (
+          <div
+            key={product.id}
+            className="group relative overflow-hidden rounded-lg bg-white p-4 shadow-card transition-all hover:shadow-card-lg"
+          >
+            <div className="aspect-square overflow-hidden rounded bg-gray-200">
+              <img
+                src={product.image || 'https://via.placeholder.com/400'}
+                alt={product.name}
+                className="h-full w-full object-cover transition-transform group-hover:scale-110"
+              />
             </div>
-            <Link
-              href={`/products/${product.slug}`}
-              className="mt-4 inline-block w-full rounded-lg bg-blue-600 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-blue-700"
-            >
-              View
-            </Link>
+            <div className="mt-4">
+              <h3 className="text-sm font-semibold text-gray-900 line-clamp-2">
+                {product.name}
+              </h3>
+              <p className="mt-1 text-xs text-gray-500">{product.category?.name}</p>
+              <div className="mt-2 flex items-center justify-between">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-lg font-bold text-gray-900">
+                    ${(product.salePrice || product.price).toFixed(2)}
+                  </span>
+                  {product.salePrice && (
+                    <span className="text-xs text-gray-500 line-through">
+                      ${product.price.toFixed(2)}
+                    </span>
+                  )}
+                </div>
+                <div className="text-xs text-yellow-500">★ {product.rating}</div>
+              </div>
+              <Link
+                href={`/products/${product.slug}`}
+                className="mt-4 inline-block w-full rounded-lg bg-blue-600 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+              >
+                View
+              </Link>
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
-  );
+        ))}
+      </div>
+    );
+  } catch (error) {
+    return <div className="text-center text-gray-500">Unable to load featured products</div>;
+  }
 }
 
 async function Categories() {
-  const categories = await prisma.category.findMany({
-    take: 6,
-  });
+  try {
+    const categories = await prisma.category.findMany({
+      take: 6,
+    });
 
-  return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
-      {categories.map((category) => (
-        <Link
-          key={category.id}
-          href={`/products?category=${category.slug}`}
-          className="group relative overflow-hidden rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-card transition-all hover:shadow-card-lg"
-        >
-          <div className="relative z-10">
-            <h3 className="font-semibold">{category.name}</h3>
-            <div className="mt-2 inline-flex items-center gap-1 text-sm opacity-0 transition-opacity group-hover:opacity-100">
-              Shop <ArrowRight size={16} />
+    return (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+        {categories.map((category) => (
+          <Link
+            key={category.id}
+            href={`/products?category=${category.slug}`}
+            className="group relative overflow-hidden rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-card transition-all hover:shadow-card-lg"
+          >
+            <div className="relative z-10">
+              <h3 className="font-semibold">{category.name}</h3>
+              <div className="mt-2 inline-flex items-center gap-1 text-sm opacity-0 transition-opacity group-hover:opacity-100">
+                Shop <ArrowRight size={16} />
+              </div>
             </div>
-          </div>
-          <div className="absolute right-0 top-0 text-blue-400 opacity-20 transition-transform group-hover:scale-110">
-            <div className="text-6xl font-bold">→</div>
-          </div>
-        </Link>
-      ))}
-    </div>
-  );
+            <div className="absolute right-0 top-0 text-blue-400 opacity-20 transition-transform group-hover:scale-110">
+              <div className="text-6xl font-bold">→</div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    );
+  } catch (error) {
+    return <div className="text-center text-gray-500">Unable to load categories</div>;
+  }
 }
 
 export default function Home() {

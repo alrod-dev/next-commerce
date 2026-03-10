@@ -1,10 +1,7 @@
-'use client';
-
 import type { Metadata } from 'next';
-import { SessionProvider } from 'next-auth/react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import CartDrawer from '@/components/layout/CartDrawer';
+import LayoutProviders from '@/components/layout/LayoutProviders';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
@@ -46,14 +43,13 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-screen flex-col bg-slate-50">
-        <SessionProvider>
+        <LayoutProviders>
           <Navbar />
           <main className="flex-1">
             {children}
           </main>
-          <CartDrawer />
           <Footer />
-        </SessionProvider>
+        </LayoutProviders>
       </body>
     </html>
   );

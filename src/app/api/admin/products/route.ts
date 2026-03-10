@@ -5,6 +5,8 @@ import { createProductSchema, updateProductSchema } from '@/lib/validators';
 import { authOptions } from '@/lib/auth';
 import { slugify } from '@/lib/utils';
 
+export const dynamic = 'force-dynamic';
+
 async function isAdmin(userId: string): Promise<boolean> {
   const user = await prisma.user.findUnique({
     where: { id: userId },

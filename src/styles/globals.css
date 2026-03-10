@@ -45,7 +45,7 @@ input[type='number'] {
 /* Smooth transitions */
 @layer components {
   .transition-all {
-    @apply transition-all duration-200;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .btn {

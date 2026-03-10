@@ -3,12 +3,17 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import { prisma } from './prisma';
 
-if (!process.env.NEXTAUTH_SECRET) {
+// Only validate secrets at runtime, not at build time
+const isProduction = process.env.NODE_ENV === 'production';
+
+if (isProduction && !process.env.NEXTAUTH_SECRET) {
   throw new Error('NEXTAUTH_SECRET is not set');
 }
 
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-  console.warn('Google OAuth is not configured');
+  if (isProduction) {
+    console.warn('Google OAuth is not configured');
+  }
 }
 
 export const authOptions: NextAuthOptions = {
